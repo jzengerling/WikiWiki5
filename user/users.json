@@ -1,23 +1,47 @@
 {
-"name": {
-    "active": true,
-    "authentication_method": "cleartext",
-    "password": "1234",
-    "authenticated": true,
-    "roles": []
-  },
+  "admin": {
+    "active": true, 
+    "authentication_method": "cleartext", 
+    "password": "admin", 
+    "authenticated": true, 
+    "roles": [
+      "admin"
+    ]
+  }, 
   "jacob": {
-    "active": true,
-    "authentication_method": "cleartext",
-    "password": "1234",
-    "authenticated": true,
-    "roles": []
-  },
+    "active": true, 
+    "authentication_method": "cleartext", 
+    "password": "1234", 
+    "authenticated": true, 
+    "roles": [
+      "admin"
+    ]
+  }, 
+  "colton": {
+    "active": true, 
+    "authentication_method": "cleartext", 
+    "password": "1234", 
+    "authenticated": true, 
+    "roles": [
+      "admin"
+    ]
+  }, 
   "sam": {
     "active": true, 
     "authentication_method": "cleartext", 
     "password": "1234", 
     "authenticated": true, 
-    "roles": []
+    "roles": [
+      "admin"
+    ]
+  }, 
+  "nick": {
+    "active": true, 
+    "authentication_method": "cleartext", 
+    "password": "1234", 
+    "authenticated": true, 
+    "roles": [
+      "admin"
+    ]
   }
 }
