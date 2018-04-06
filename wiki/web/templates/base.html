@@ -41,21 +41,23 @@
 		</div>
 
 		<div class="container">
-            <div class="row">
+
+            {#<div class="row">
                 <div class="span10 offset1">
-                    <button class="btn pull-right" onclick="favoriteCurrentPage(this)"><i class="fa fa-heart"></i></button>
+                    <button class="btn pull-right" onclick="favoriteCurrentPage('{{ page.title }}', '{{ page.url }}')"><i class="fa fa-heart"></i></button>
                 </div>
-            </div>
+            </div>#}
 			<div class="row">
 				<div class="span10 offset1">
-					{% block header %}
+                    {% block header %}
 						<div class="page-header ">
 							<h1>{% block title %}{{ page.title }}{% endblock title %}</h1>
                         </div>
-					{% endblock header %}
+                    {% endblock header %}
 				</div>
 
 			</div>
+
 			<div class="row">
 				<div class="span7 offset1">
 					{% with messages = get_flashed_messages(with_categories=True) %}

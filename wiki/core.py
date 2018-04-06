@@ -237,9 +237,6 @@ class Page(object):
     def tags(self, value):
         self['tags'] = value
 
-    def favorite_page(self):
-        return self
-
 
 class Wiki(object):
     def __init__(self, root):
@@ -378,3 +375,8 @@ class Wiki(object):
                     matched.append(page)
                     break
         return matched
+
+    def favorite(self, pageUrl, pageTitle):
+        print('favorite called in core.wiki...url: ' + pageUrl + "...title: " + pageTitle)
+        
+        return True
