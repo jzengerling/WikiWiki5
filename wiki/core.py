@@ -237,6 +237,9 @@ class Page(object):
     def tags(self, value):
         self['tags'] = value
 
+    def favorite_page(self):
+        return self
+
 
 class Wiki(object):
     def __init__(self, root):
