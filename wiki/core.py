@@ -374,21 +374,20 @@ class Wiki(object):
     def search(self, term, ignore_case=True, attrs=['title', 'tags', 'body']):
         pages = self.index()
         regex = re.compile(term, re.IGNORECASE if ignore_case else 0)
-        matched = []
+        matched = [[] for i in range(2)]
         for page in pages:
             for attr in attrs:
                 if regex.search(getattr(page, attr)):
-                    matched.append(page)
+                    matched[0].append(page)
                     break
         
         #search pages by creator's name
-        ########################################            
+        ########################################   
         jsonFile = open('creators.json', 'r')
         data = json.load(jsonFile)
-        
         for page in pages:
             if regex.search(data[page.url][0]['creator']):
-                matched.append(page)
+                matched[1].append(page)
         ########################################
         
         return matched
