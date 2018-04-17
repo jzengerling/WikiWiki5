@@ -9,6 +9,7 @@ import re
 
 from flask import abort
 from flask import url_for
+from flask import Flask,json,jsonify
 import markdown
 
 
@@ -378,5 +379,51 @@ class Wiki(object):
 
     def favorite(self, pageUrl, pageTitle):
         print('favorite called in core.wiki...url: ' + pageUrl + "...title: " + pageTitle)
-        
-        return True
+        favorite_json = ""
+        try:
+            favorite = FavoritePage(pageTitle, pageUrl)
+            print('favorite before convert: ' + favorite.to_string())
+            print('favorite after convert: ' + favorite.to_json().get('page').get('title'))
+            current_favorites = self.get_favorites()
+            favorite_json = json.dumps(favorite.to_json(), ensure_ascii=False)
+            print(type(self.get_favorites()))
+            if favorite.to_json().get('url') in current_favorites.values():
+                print('page already in favorite')
+                return('Padge Already A Favorite')
+            else:
+                with open('favorites/favorites.json', 'a', encoding="utf-8") as outFile:
+                    outFile.write(unicode(favorite_json))
+                    outFile.write(unicode("\n"))
+
+        except Exception, e:
+            print str(e)
+
+        return favorite_json
+
+    def get_favorites(self):
+
+        try:
+            favoritesList = {}
+            with open('favorites/favorites.json', 'r') as inputFile:
+                json_data = inputFile.read()
+                favoritesList = json.loads(json_data)
+                print(favoritesList)
+
+        except Exception, e:
+            print str(e)
+
+        return favoritesList
+
+
+class FavoritePage:
+    def __init__(self, title, url):
+        self.pageTitle = title
+        self.pageUrl = url
+
+    def to_string(self):
+        return "Page Title: " + self.pageTitle + " ....  Page URL: " + self.pageUrl
+
+    def to_json(self):
+        return {"page": {'title': self.pageTitle, 'url': self.pageUrl}}
+
+
