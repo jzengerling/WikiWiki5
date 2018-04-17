@@ -74,6 +74,15 @@ def edit(url):
     return render_template('editor.html', form=form, page=page)
 
 
+@bp.route('/favorite/<path:url>', methods=['GET', 'POST'])
+@protect
+def favorite(url):
+    page = current_wiki.get_or_404(url)
+    print('SUCCESS')
+    current_wiki.favorite(url,page.title)
+    return redirect(url_for('wiki.home'))
+
+
 @bp.route('/preview/', methods=['POST'])
 @protect
 def preview():
