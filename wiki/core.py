@@ -10,6 +10,7 @@ import re
 from flask import abort
 from flask import url_for
 import markdown
+import json
 
 
 def clean_url(url):
@@ -18,10 +19,7 @@ def clean_url(url):
         spaces and all leading and trailing spaces. Changes spaces
         to underscores and makes all characters lowercase. Also
         takes care of Windows style folders use.
-
         :param str url: the url to clean
-
-
         :returns: the cleaned url
         :rtype: str
     """
@@ -36,17 +34,14 @@ def wikilink(text, url_formatter=None):
         Processes Wikilink syntax "[[Link]]" within the html body.
         This is intended to be run after content has been processed
         by markdown and is already HTML.
-
         :param str text: the html to highlight wiki links in.
         :param function url_formatter: which URL formatter to use,
             will by default use the flask url formatter
-
         Syntax:
             This accepts Wikilink syntax in the form of [[WikiLink]] or
             [[url/location|LinkName]]. Everything is referenced from the
             base location "/", therefore sub-pages need to use the
             [[page/subpage|Subpage]].
-
         :returns: the processed html
         :rtype: str
     """
@@ -71,7 +66,6 @@ class Processor(object):
     """
         The processor handles the processing of file content into
         metadata and markdown and takes care of the rendering.
-
         It also offers some helper methods that can be used for various
         cases.
     """
@@ -82,7 +76,6 @@ class Processor(object):
     def __init__(self, text):
         """
             Initialization of the processor.
-
             :param str text: the text to process
         """
         self.md = markdown.Markdown([
@@ -125,7 +118,6 @@ class Processor(object):
     def process_meta(self):
         """
             Get metadata.
-
             .. warning:: Can only be called after :meth:`html` was
                 called.
         """
@@ -294,12 +286,29 @@ class Wiki(object):
         if not self.exists(url):
             return False
         os.remove(path)
+        
+        #an attempt at removing current url from the json file
+        #crashes every time you delete a page, but a refresh temporarily
+        #make the page functional
+		##################################
+        #with open('creators.json') as f:
+         #   jsonFile = json.load(f.read())
+        #data = json.loads(jsonFile)
+		
+        #for i in data:
+         #   print i[url]
+		
+        #jsonFile = open('creators.json', 'w')		
+        #json.dump(data, jsonFile, indent=4)
+        #jsonFile.close()
+		###################################
+        
+        
         return True
 
     def index(self):
         """
             Builds up a list of all the available pages.
-
             :returns: a list of all the wiki pages
             :rtype: list
         """
@@ -321,12 +330,9 @@ class Wiki(object):
     def index_by(self, key):
         """
             Get an index based on the given key.
-
             Will use the metadata value of the given key to group
             the existing pages.
-
             :param str key: the attribute to group the index on.
-
             :returns: Will return a dictionary where each entry holds
                 a list of pages that share the given attribute.
             :rtype: dict
@@ -374,4 +380,20 @@ class Wiki(object):
                 if regex.search(getattr(page, attr)):
                     matched.append(page)
                     break
+        
+        #search pages by creator's name
+        ########################################            
+        jsonFile = open('creators.json', 'r')
+        data = json.load(jsonFile)
+        
+        for page in pages:
+            if regex.search(data[page.url][0]['creator']):
+                matched.append(page)
+        ########################################
+        
         return matched
+
+    def favorite(self, pageUrl, pageTitle):
+        print('favorite called in core.wiki...url: ' + pageUrl + "...title: " + pageTitle)
+        
+        return True
