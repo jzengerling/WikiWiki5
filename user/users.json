@@ -18,6 +18,7 @@
     ]
   }, 
   "colton": {
+  "nick": {
     "active": true, 
     "authentication_method": "cleartext", 
     "password": "1234", 
@@ -36,6 +37,7 @@
     ]
   }, 
   "nick": {
+  "colton": {
     "active": true, 
     "authentication_method": "cleartext", 
     "password": "1234", 

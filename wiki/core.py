@@ -376,6 +376,7 @@ class Wiki(object):
                     matched.append(page)
                     break
         return matched
+<<<<<<< HEAD
 
     def favorite(self, pageUrl, pageTitle):
         print('favorite called in core.wiki...url: ' + pageUrl + "...title: " + pageTitle)
@@ -427,3 +428,5 @@ class FavoritePage:
         return {"page": {'title': self.pageTitle, 'url': self.pageUrl}}
 
 
+=======
+>>>>>>> 90330a849b559c33392a402049c36603de0e5787

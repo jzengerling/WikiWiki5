@@ -6,3 +6,5 @@
 *.egg-info
 dist/
 config.py
+config.py
+wiki/users/users.db
