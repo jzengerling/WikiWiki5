@@ -5,8 +5,6 @@
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap.css') }}">
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='responsive.css') }}">
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='pygments.css') }}">
-        <link rel='shortcut icon' type='image/x-icon' href='/favicon.ico' />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	</head>
 
 	<body>
@@ -41,23 +39,15 @@
 		</div>
 
 		<div class="container">
-
-            {#<div class="row">
-                <div class="span10 offset1">
-                    <button class="btn pull-right" onclick="favoriteCurrentPage('{{ page.title }}', '{{ page.url }}')"><i class="fa fa-heart"></i></button>
-                </div>
-            </div>#}
 			<div class="row">
 				<div class="span10 offset1">
-                    {% block header %}
-						<div class="page-header ">
+					{% block header %}
+						<div class="page-header">
 							<h1>{% block title %}{{ page.title }}{% endblock title %}</h1>
-                        </div>
-                    {% endblock header %}
+						</div>
+					{% endblock header %}
 				</div>
-
 			</div>
-
 			<div class="row">
 				<div class="span7 offset1">
 					{% with messages = get_flashed_messages(with_categories=True) %}
@@ -93,8 +83,5 @@
 			{% block postscripts %}
 			{% endblock postscripts %}
 		</script>
-
-        <script type="text/javascript" src="{{url_for('static', filename='favorites.js')}}"></script>
-
 	</body>
 </html>

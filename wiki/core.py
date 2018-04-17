@@ -375,8 +375,3 @@ class Wiki(object):
                     matched.append(page)
                     break
         return matched
-
-    def favorite(self, pageUrl, pageTitle):
-        print('favorite called in core.wiki...url: ' + pageUrl + "...title: " + pageTitle)
-        
-        return True
