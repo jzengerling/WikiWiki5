@@ -1,0 +1,44 @@
+{
+    "nothersearchtest": [
+        {
+            "creator": "Colton", 
+            "time": "04-14-2018 23:27:20"
+        }
+    ], 
+    "testsearch": [
+        {
+            "time": "04-14-2018 23:26:18", 
+            "creator": "Colton"
+        }
+    ],
+    "sam": [
+        {
+            "creator": "admin", 
+            "time": "04-14-2018 00:27:11"
+        }
+    ], 
+    "colton": [
+        {
+            "creator": "admin", 
+            "time": "04-14-2018 00:27:11"
+        }
+    ], 
+    "nick": [
+        {
+            "creator": "admin", 
+            "time": "04-14-2018 00:27:11"
+        }
+    ], 
+    "jacob": [
+        {
+            "creator": "admin", 
+            "time": "04-14-2018 00:27:11"
+        }
+    ], 
+    "home": [
+        {
+            "creator": "admin", 
+            "time": "04-14-2018 00:27:11"
+        }
+    ]
+}
