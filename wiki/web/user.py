@@ -2,6 +2,7 @@
     User classes & helpers
     ~~~~~~~~~~~~~~~~~~~~~~
 """
+import sqlite3
 import os
 import json
 import binascii
@@ -12,68 +13,114 @@ from flask import current_app
 from flask_login import current_user
 
 
-
 class UserManager(object):
-    """A very simple user Manager, that saves it's data as json."""
-    def __init__(self, path):
-        self.file = os.path.join(path, 'users.json')
 
-    def read(self):
-        if not os.path.exists(self.file):
-            return {}
-        with open(self.file) as f:
-            data = json.loads(f.read())
-        return data
+    def __init__(self, defaultAuthenticationMethod = "hash"):
+        self.defaultAuthenticationMethod = defaultAuthenticationMethod
 
-    def write(self, data):
-        with open(self.file, 'w') as f:
-            f.write(json.dumps(data, indent=2))
+    def database(f):
+        def _exec(self, *args, **argd):
+            connection = sqlite3.connect('users.db')
+            connection.execute("PRAGMA foreign_keys = ON")
 
-    def add_user(self, name, password,
-                 active=True, roles=[], authentication_method=None):
-        users = self.read()
-        if users.get(name):
+            cursor = connection.cursor()
+
+            returnVal = None
+
+            try:
+                cursor.execute('''create table if not exists Users 
+                              (name TEXT PRIMARY KEY, password TEXT, 
+                              authenticated INTEGER, active INTEGER, 
+                              authentication_method TEXT)''')
+
+                cursor.execute('''create table if not exists Roles 
+                              (name TEXT, role TEXT, PRIMARY KEY (name, role), 
+                              FOREIGN KEY(name) REFERENCES Users(name) ON DELETE CASCADE)''')
+
+                returnVal = f(self, cursor, *args, **argd)
+            except Exception, e:
+                connection.rollback()
+                raise
+            else:
+                connection.commit()  # or maybe not
+            finally:
+                connection.close()
+
+            return returnVal
+
+        return _exec
+
+
+    @database
+    def add_user(self, cursor, name, password, active=True, roles=[], authentication_method=None):
+
+        if self.get_user(name) != None:
             return False
+
+        dbpassword = ""
         if authentication_method is None:
-            authentication_method = get_default_authentication_method()
-        new_user = {
-            'active': active,
-            'roles': roles,
-            'authentication_method': authentication_method,
-            'authenticated': False
-        }
-        # Currently we have only two authentication_methods: cleartext and
-        # hash. If we get more authentication_methods, we will need to go to a
-        # strategy object pattern that operates on User.data.
+            authentication_method = self.defaultAuthenticationMethod
         if authentication_method == 'hash':
-            new_user['hash'] = make_salted_hash(password)
+            dbpassword = make_salted_hash(password)
         elif authentication_method == 'cleartext':
-            new_user['password'] = password
+            dbpassword = password
         else:
             raise NotImplementedError(authentication_method)
-        users[name] = new_user
-        self.write(users)
-        userdata = users.get(name)
-        return User(self, name, userdata)
 
-    def get_user(self, name):
-        users = self.read()
-        userdata = users.get(name)
-        if not userdata:
+        cursor.execute('INSERT INTO Users VALUES (?,?,?,?,?)', (name, dbpassword, False, active, authentication_method))
+        for role in roles:
+            cursor.execute('INSERT INTO Roles VALUES (?,?)', (name, role))
+
+
+    @database
+    def get_user(self, cursor, name):
+        cursor.execute('SELECT * FROM Users WHERE name=?', (name,))
+        user = cursor.fetchone()
+        if user == None:
             return None
-        return User(self, name, userdata)
+        else:
+            cursor.execute('SELECT * FROM Roles WHERE name=?', (name,))
+            roleRows = cursor.fetchall()
+            roles=[]
+            for role in roleRows:
+                roles.append(role[1])
 
-    def delete_user(self, name):
-        users = self.read()
-        if not users.pop(name, False):
+            data = {};
+            data["password"] = user[1]
+            data["authenticated"] = user[2]
+            data["active"] = user[3]
+            data["authentication_method"] = user[4]
+            data["roles"] = roles
+
+            return User(self, user[0], data)
+
+    @database
+    def delete_user(self, cursor, name):
+        cursor.execute('DELETE FROM Users WHERE name=?', (name,))
+        if cursor.rowcount == 0:
             return False
-        self.write(users)
         return True
 
-    def update(self, name, userdata):
-        data = self.read()
-        data[name] = userdata
-        self.write(data)
+    @database
+    def update(self, cursor, name, userdata):
+
+        pw = userdata["password"]
+        auth = userdata["authenticated"]
+        active = userdata["active"]
+        authmethod = userdata["authentication_method"]
+        roles = userdata["roles"]
+
+        cursor.execute('''
+        UPDATE Users
+        SET password = ?, authenticated = ?,
+            active = ?, authentication_method = ? 
+        WHERE name = ?
+        ''', (pw, auth, active, authmethod, name))
+
+        cursor.execute('DELETE FROM Roles WHERE name=?', (name,))
+
+        for role in roles:
+            cursor.execute('INSERT INTO Roles VALUES (?,?)', (name, role))
 
 
 class User(object):
@@ -109,7 +156,7 @@ class User(object):
         authentication_method is missing or unknown."""
         authentication_method = self.data.get('authentication_method', None)
         if authentication_method is None:
-            authentication_method = get_default_authentication_method()
+            authentication_method = self.manager.authentication_method
         # See comment in UserManager.add_user about authentication_method.
         if authentication_method == 'hash':
             result = check_hashed_password(password, self.get('hash'))
@@ -118,10 +165,6 @@ class User(object):
         else:
             raise NotImplementedError(authentication_method)
         return result
-
-
-def get_default_authentication_method():
-    return current_app.config.get('DEFAULT_AUTHENTICATION_METHOD', 'cleartext')
 
 
 def make_salted_hash(password, salt=None):
@@ -146,3 +189,4 @@ def protect(f):
             return current_app.login_manager.unauthorized()
         return f(*args, **kwargs)
     return wrapper
+
