@@ -238,6 +238,16 @@ class Page(object):
     def tags(self, value):
         self['tags'] = value
 
+    @property
+    def category(self):
+        try:
+            return self['category']
+        except KeyError:
+            return ""
+
+    @category.setter
+    def categories(self, value):
+        self['category'] = value
 
 class Wiki(object):
     def __init__(self, root):
@@ -358,6 +368,27 @@ class Wiki(object):
                     tags[tag] = [page]
         return tags
 
+    def get_category(self):
+        pages = self.index()
+        categories = {}
+        for page in pages:
+            category = page.category.strip()
+            if category == '':
+                continue
+            elif categories.get(category):
+                categories[category].append(page)
+            else:
+                categories[category] = [page]
+        return categories
+
+    def index_by_categories(self, category):
+        pages = self.index()
+        categories = []
+        for page in pages:
+            if category in page.category:
+                categories.append(page)
+        return categories
+
     def index_by_tag(self, tag):
         pages = self.index()
         tagged = []
@@ -366,7 +397,7 @@ class Wiki(object):
                 tagged.append(page)
         return sorted(tagged, key=lambda x: x.title.lower())
 
-    def search(self, term, ignore_case=True, attrs=['title', 'tags', 'body']):
+    def search(self, term, ignore_case=True, attrs=['title', 'tags', 'body', 'categories']):
         pages = self.index()
         regex = re.compile(term, re.IGNORECASE if ignore_case else 0)
         matched = []
@@ -376,10 +407,10 @@ class Wiki(object):
                     matched.append(page)
                     break
         return matched
-<<<<<<< HEAD
 
     def favorite(self, pageUrl, pageTitle):
         print('favorite called in core.wiki...url: ' + pageUrl + "...title: " + pageTitle)
+
         favorite_json = ""
         try:
             favorite = FavoritePage(pageTitle, pageUrl)
@@ -390,7 +421,7 @@ class Wiki(object):
             print(type(self.get_favorites()))
             if favorite.to_json().get('url') in current_favorites.values():
                 print('page already in favorite')
-                return('Padge Already A Favorite')
+                return('Page Already A Favorite')
             else:
                 with open('favorites/favorites.json', 'a', encoding="utf-8") as outFile:
                     outFile.write(unicode(favorite_json))
@@ -426,7 +457,6 @@ class FavoritePage:
 
     def to_json(self):
         return {"page": {'title': self.pageTitle, 'url': self.pageUrl}}
+        
+        return True
 
-
-=======
->>>>>>> 90330a849b559c33392a402049c36603de0e5787

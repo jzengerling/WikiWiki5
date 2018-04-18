@@ -25,7 +25,6 @@ from wiki.web.user import protect
 
 bp = Blueprint('wiki', __name__)
 
-
 @bp.route('/')
 @protect
 def home():
@@ -79,7 +78,7 @@ def edit(url):
 def favorite(url):
     page = current_wiki.get_or_404(url)
     print('SUCCESS')
-    current_wiki.favorite(url,page.title)
+    current_wiki.favorite(url, page.title)
     return redirect(url_for('wiki.home'))
 
 
@@ -104,6 +103,18 @@ def move(url):
     return render_template('move.html', form=form, page=page)
 
 
+@bp.route('/category/')
+@protect
+def category():
+    categories = current_wiki.get_category()
+    return render_template('category.html', categories=categories)
+
+@bp.route('/categories/<string:name>/')
+@protect
+def categories(name):
+    category = current_wiki.index_by_categories(name)
+    return render_template('categories.html', pages=category, category=name)
+
 @bp.route('/delete/<path:url>/')
 @protect
 def delete(url):
@@ -112,13 +123,11 @@ def delete(url):
     flash('Page "%s" was deleted.' % page.title, 'success')
     return redirect(url_for('wiki.home'))
 
-
 @bp.route('/tags/')
 @protect
 def tags():
     tags = current_wiki.get_tags()
     return render_template('tags.html', tags=tags)
-
 
 @bp.route('/tag/<string:name>/')
 @protect
