@@ -8,7 +8,7 @@
       "admin"
     ]
   }, 
-  "jacob": {
+  "Jacob": {
     "active": true, 
     "authentication_method": "cleartext", 
     "password": "1234", 
@@ -17,8 +17,7 @@
       "admin"
     ]
   }, 
-  "colton": {
-  "nick": {
+  "Nick": {
     "active": true, 
     "authentication_method": "cleartext", 
     "password": "1234", 
@@ -27,7 +26,7 @@
       "admin"
     ]
   }, 
-  "sam": {
+  "Sam": {
     "active": true, 
     "authentication_method": "cleartext", 
     "password": "1234", 
@@ -36,8 +35,7 @@
       "admin"
     ]
   }, 
-  "nick": {
-  "colton": {
+  "Colton": {
     "active": true, 
     "authentication_method": "cleartext", 
     "password": "1234", 

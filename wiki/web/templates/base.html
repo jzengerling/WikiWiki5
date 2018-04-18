@@ -72,6 +72,15 @@
 					{% endblock sidebar %}
 				</div>
 			</div>
+            
+            <!--div to display page creator-->
+			<div id="creator">
+                <!--if data is not empty, display who created the page and when-->
+				{%if data%}
+					<p style="text-color: red"><em> Page created by {{ data["creator"] }} on {{ data["time"] }}</em></p>
+				{% endif %}
+			</div>
+
 		</div>
 		<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.0/jquery.min.js "></script>
 		<script type="text/javascript">
