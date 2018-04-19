@@ -9,3 +9,4 @@ config.py
 Riki.py
 .idea/workspace.xml
 wiki/users/users.db
+config.py
