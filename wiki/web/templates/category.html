@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Categories {{ tag }}{% endblock title %}
+
+
+{% block content %}
+{% if categories %}
+    <table class="table">
+		<thead>
+			<tr>
+				<th>Category</th>
+			</tr>
+		</thead>
+			<tbody>
+			{% for category in categories %}
+				<tr>
+					<td><a href="{{ url_for('wiki.categories', name=category) }}">{{ category }}</a></td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+{% endif %}
+{% endblock content %}

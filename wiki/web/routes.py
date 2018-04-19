@@ -21,10 +21,10 @@ from wiki.web.forms import URLForm
 from wiki.web import current_wiki
 from wiki.web import current_users
 from wiki.web.user import protect
-
+import json
+from time import gmtime, strftime
 
 bp = Blueprint('wiki', __name__)
-
 
 @bp.route('/')
 @protect
@@ -45,8 +45,18 @@ def index():
 @bp.route('/<path:url>/')
 @protect
 def display(url):
+
+    #open creators.json file and pass current url's attributes to page.html
+    #so we can access it in base.html
+    ########################################
+    jsonFile = open('creators.json', 'r')
+    data = json.load(jsonFile)
+    jsonFile.close()
+    data = data[url][0]
+	########################################
+    
     page = current_wiki.get_or_404(url)
-    return render_template('page.html', page=page)
+    return render_template('page.html', page=page, data=data)
 
 
 @bp.route('/create/', methods=['GET', 'POST'])
@@ -54,8 +64,27 @@ def display(url):
 def create():
     form = URLForm()
     if form.validate_on_submit():
-        return redirect(url_for(
-            'wiki.edit', url=form.clean_url(form.url.data)))
+        url=form.clean_url(form.url.data)
+	
+        #get current user's name and current date when page is created
+        #then append it to the creators.json file
+        ########################################
+        user = current_user.name
+        now = strftime("%m-%d-%Y %H:%M:%S")
+        jsonFile = open('creators.json', 'r')
+        data = json.load(jsonFile)
+        jsonFile.close()
+        data[url] = []
+        data[url].append({
+            'creator': user,
+            'time': now
+        })
+        jsonFile = open('creators.json', 'w')
+        json.dump(data, jsonFile, indent=4)
+        jsonFile.close()
+		########################################
+        
+        return redirect(url_for('wiki.edit', url=form.clean_url(form.url.data)))
     return render_template('create.html', form=form)
 
 
@@ -128,6 +157,18 @@ def move(url):
     return render_template('move.html', form=form, page=page)
 
 
+@bp.route('/category/')
+@protect
+def category():
+    categories = current_wiki.get_category()
+    return render_template('category.html', categories=categories)
+
+@bp.route('/categories/<string:name>/')
+@protect
+def categories(name):
+    category = current_wiki.index_by_categories(name)
+    return render_template('categories.html', pages=category, category=name)
+
 @bp.route('/delete/<path:url>/')
 @protect
 def delete(url):
@@ -136,13 +177,11 @@ def delete(url):
     flash('Page "%s" was deleted.' % page.title, 'success')
     return redirect(url_for('wiki.home'))
 
-
 @bp.route('/tags/')
 @protect
 def tags():
     tags = current_wiki.get_tags()
     return render_template('tags.html', tags=tags)
-
 
 @bp.route('/tag/<string:name>/')
 @protect
@@ -154,11 +193,10 @@ def tag(name):
 @bp.route('/search/', methods=['GET', 'POST'])
 @protect
 def search():
-    form = SearchForm()
+    form = SearchForm()    
     if form.validate_on_submit():
         results = current_wiki.search(form.term.data, form.ignore_case.data)
-        return render_template('search.html', form=form,
-                               results=results, search=form.term.data)
+        return render_template('search.html', form=form, results=results, search=form.term.data)
     return render_template('search.html', form=form, search=None)
 
 
@@ -212,4 +250,3 @@ def user_delete(user_id):
 @bp.errorhandler(404)
 def page_not_found(error):
     return render_template('404.html'), 404
-
