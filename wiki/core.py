@@ -14,6 +14,7 @@ from flask import url_for
 from flask import Flask,json,jsonify
 import markdown
 import json
+import creator_module
 
 from random import *
 
@@ -304,20 +305,9 @@ class Wiki(object):
             return False
         os.remove(path)
         
-        #an attempt at removing current url from the json file
-        #crashes every time you delete a page, but a refresh temporarily
-        #make the page functional
+        #removing current url's entry from the json file
 		##################################
-        #with open('creators.json') as f:
-         #   jsonFile = json.load(f.read())
-        #data = json.loads(jsonFile)
-		
-        #for i in data:
-         #   print i[url]
-		
-        #jsonFile = open('creators.json', 'w')		
-        #json.dump(data, jsonFile, indent=4)
-        #jsonFile.close()
+        creator_module.delete_creator_entry(url)
 		###################################
         
         
@@ -421,11 +411,7 @@ class Wiki(object):
         
         #search pages by creator's name
         ########################################   
-        jsonFile = open('creators.json', 'r')
-        data = json.load(jsonFile)
-        for page in pages:
-            if regex.search(data[page.url][0]['creator']):
-                matched[1].append(page)
+        matched[1] = creator_module.search_by_creator(pages, regex)
         ########################################
         
         return matched

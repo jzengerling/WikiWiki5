@@ -12,18 +12,13 @@
         }
     ], 
     "sam": [
-        {
-            "time": "04-14-2018 00:27:11", 
-            "creator": "admin"
-        }
-    ], 
     "colton": [
         {
             "time": "04-14-2018 00:27:11", 
             "creator": "admin"
         }
     ], 
-    "nick": [
+    "home": [
         {
             "time": "04-14-2018 00:27:11", 
             "creator": "admin"
@@ -35,7 +30,13 @@
             "creator": "admin"
         }
     ], 
-    "home": [
+    "nick": [
+        {
+            "time": "04-14-2018 00:27:11", 
+            "creator": "admin"
+        }
+    ],
+    "sam": [
         {
             "time": "04-14-2018 00:27:11", 
             "creator": "admin"

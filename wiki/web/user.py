@@ -4,7 +4,6 @@
 """
 import sqlite3
 import os
-import json
 import binascii
 import hashlib
 from functools import wraps
@@ -15,12 +14,12 @@ from flask_login import current_user
 
 class UserManager(object):
 
-    def __init__(self, defaultAuthenticationMethod = "hash"):
+    def __init__(self, defaultAuthenticationMethod = "hash", path="."):
         self.defaultAuthenticationMethod = defaultAuthenticationMethod
-
+        self.path = path
     def database(f):
         def _exec(self, *args, **argd):
-            connection = sqlite3.connect('users.db')
+            connection = sqlite3.connect(self.path + '/users.db')
             connection.execute("PRAGMA foreign_keys = ON")
 
             cursor = connection.cursor()
@@ -76,7 +75,7 @@ class UserManager(object):
     def get_user(self, cursor, name):
         cursor.execute('SELECT * FROM Users WHERE name=?', (name,))
         user = cursor.fetchone()
-        if user == None:
+        if user is None:
             return None
         else:
             cursor.execute('SELECT * FROM Roles WHERE name=?', (name,))
