@@ -4,7 +4,6 @@
 """
 import sqlite3
 import os
-import json
 import binascii
 import hashlib
 from functools import wraps
