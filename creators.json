@@ -1,29 +1,11 @@
 {
-    "nothersearchtest": [
-        {
-            "creator": "Colton", 
-            "time": "04-14-2018 23:27:20"
-        }
-    ], 
-    "testsearch": [
-        {
-            "time": "04-14-2018 23:26:18", 
-            "creator": "Colton"
-        }
-    ],
-    "sam": [
-        {
-            "creator": "admin", 
-            "time": "04-14-2018 00:27:11"
-        }
-    ], 
     "colton": [
         {
             "creator": "admin", 
             "time": "04-14-2018 00:27:11"
         }
     ], 
-    "nick": [
+    "home": [
         {
             "creator": "admin", 
             "time": "04-14-2018 00:27:11"
@@ -35,7 +17,13 @@
             "time": "04-14-2018 00:27:11"
         }
     ], 
-    "home": [
+    "nick": [
+        {
+            "creator": "admin", 
+            "time": "04-14-2018 00:27:11"
+        }
+    ],
+    "sam": [
         {
             "creator": "admin", 
             "time": "04-14-2018 00:27:11"
