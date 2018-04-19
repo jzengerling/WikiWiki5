@@ -1,12 +1,11 @@
 from flask import Flask
+import os
+from wiki import create_app
 
 app = Flask(__name__)
 
-
-@app.route('/')
-def hello_world():
-    return 'Hello World!'
-
+directory = os.getcwd()
+app = create_app(directory)
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='localhost', debug=True)

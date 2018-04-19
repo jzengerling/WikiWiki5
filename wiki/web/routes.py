@@ -25,7 +25,6 @@ from wiki import creator_module
 
 bp = Blueprint('wiki', __name__)
 
-
 @bp.route('/')
 @protect
 def home():
@@ -88,13 +87,37 @@ def edit(url):
     return render_template('editor.html', form=form, page=page)
 
 
+@bp.route('/random/', methods=['GET', 'POST'])
+@protect
+def random():
+    random_page = current_wiki.random()
+    page = current_wiki.get_or_404(random_page.url)
+    return render_template('page.html', page=page)
+    return redirect(url_for('wiki.home'))
+
+
 @bp.route('/favorite/<path:url>', methods=['GET', 'POST'])
 @protect
 def favorite(url):
     page = current_wiki.get_or_404(url)
-    print('SUCCESS')
     current_wiki.favorite(url,page.title)
-    return redirect(url_for('wiki.home'))
+    return render_template('page.html', page=page)
+
+
+@bp.route('/favorites/', methods=['GET', 'POST'])
+@protect
+def favorites():
+    favorite_pages = current_wiki.get_favorites()
+    # favorite_pages = []
+    return render_template('favorites.html', pages=favorite_pages)
+
+
+@bp.route('/deleteFavorite/<path:url>', methods=['GET', 'POST'])
+@protect
+def deleteFavorite(url):
+    page = current_wiki.get_or_404(url)
+    current_wiki.delete_favorite(url, page.title)
+    return favorites()
 
 
 @bp.route('/preview/', methods=['POST'])
@@ -118,6 +141,18 @@ def move(url):
     return render_template('move.html', form=form, page=page)
 
 
+@bp.route('/category/')
+@protect
+def category():
+    categories = current_wiki.get_category()
+    return render_template('category.html', categories=categories)
+
+@bp.route('/categories/<string:name>/')
+@protect
+def categories(name):
+    category = current_wiki.index_by_categories(name)
+    return render_template('categories.html', pages=category, category=name)
+
 @bp.route('/delete/<path:url>/')
 @protect
 def delete(url):
@@ -126,13 +161,11 @@ def delete(url):
     flash('Page "%s" was deleted.' % page.title, 'success')
     return redirect(url_for('wiki.home'))
 
-
 @bp.route('/tags/')
 @protect
 def tags():
     tags = current_wiki.get_tags()
     return render_template('tags.html', tags=tags)
-
 
 @bp.route('/tag/<string:name>/')
 @protect

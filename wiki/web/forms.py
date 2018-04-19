@@ -7,6 +7,7 @@ from wtforms import BooleanField
 from wtforms import TextField
 from wtforms import TextAreaField
 from wtforms import PasswordField
+from wtforms import SelectField
 from wtforms.validators import InputRequired
 from wtforms.validators import ValidationError
 
@@ -38,6 +39,7 @@ class EditorForm(Form):
     title = TextField('', [InputRequired()])
     body = TextAreaField('', [InputRequired()])
     tags = TextField('')
+    categories = SelectField(u'Subject', choices=[('Sports', 'Sports'), ('History', 'History'), ('Science', 'Science'), ('Games', 'Games'), ('People', 'People'), ('Places', 'Places'), ('Movies', 'Movies'), ('Books', 'Books'), ('Math', 'Math')])
 
 
 class LoginForm(Form):

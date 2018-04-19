@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Categories {{ category }}{% endblock title %}
+
+{% block content %}
+{% if pages %}
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Pages</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for page in pages %}
+				<tr>
+					<td><a href="{{ url_for('wiki.display', url=page.url) }}">{{ page.title }}</a></td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+{% else %}
+	<p>There are no pages for {{ category }}.</p>
+{% endif %}
+{% endblock content %}
