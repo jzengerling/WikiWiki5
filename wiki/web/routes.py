@@ -21,8 +21,7 @@ from wiki.web.forms import URLForm
 from wiki.web import current_wiki
 from wiki.web import current_users
 from wiki.web.user import protect
-import json
-from time import gmtime, strftime
+from wiki import creator_module
 
 bp = Blueprint('wiki', __name__)
 
@@ -50,10 +49,7 @@ def display(url):
     #open creators.json file and pass current url's attributes to page.html
     #so we can access it in base.html
     ########################################
-    jsonFile = open('creators.json', 'r')
-    data = json.load(jsonFile)
-    jsonFile.close()
-    data = data[url][0]
+    data = creator_module.get_page_data(url)
 	########################################
     
     page = current_wiki.get_or_404(url)
@@ -70,19 +66,7 @@ def create():
         #get current user's name and current date when page is created
         #then append it to the creators.json file
         ########################################
-        user = current_user.name
-        now = strftime("%m-%d-%Y %H:%M:%S")
-        jsonFile = open('creators.json', 'r')
-        data = json.load(jsonFile)
-        jsonFile.close()
-        data[url] = []
-        data[url].append({
-            'creator': user,
-            'time': now
-        })
-        jsonFile = open('creators.json', 'w')
-        json.dump(data, jsonFile, indent=4)
-        jsonFile.close()
+        creator_module.add_to_json(url)
 		########################################
         
         return redirect(url_for('wiki.edit', url=form.clean_url(form.url.data)))
