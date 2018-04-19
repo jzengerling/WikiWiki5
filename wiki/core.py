@@ -2,6 +2,8 @@
     Wiki core
     ~~~~~~~~~
 """
+
+from wiki.web.favorites import Favorites
 from collections import OrderedDict
 from io import open
 import os
@@ -11,6 +13,10 @@ from flask import abort
 from flask import url_for
 from flask import Flask,json,jsonify
 import markdown
+
+from random import *
+
+
 
 
 def clean_url(url):
@@ -378,42 +384,54 @@ class Wiki(object):
         return matched
 <<<<<<< HEAD
 
+    def random(self):
+        all_pages = self.index()
+        home_index = self.get_home_page_index(all_pages)
+        del all_pages[home_index]
+        random_page = sample(all_pages, 1)
+
+        return random_page[0]
+
+    def get_home_page_index(self, list):
+        index = 0;
+        for item in list:
+            if item.url == 'home':
+                return index
+            index = index + 1;
+        return -1
+
     def favorite(self, pageUrl, pageTitle):
         print('favorite called in core.wiki...url: ' + pageUrl + "...title: " + pageTitle)
-        favorite_json = ""
         try:
-            favorite = FavoritePage(pageTitle, pageUrl)
-            print('favorite before convert: ' + favorite.to_string())
-            print('favorite after convert: ' + favorite.to_json().get('page').get('title'))
-            current_favorites = self.get_favorites()
-            favorite_json = json.dumps(favorite.to_json(), ensure_ascii=False)
             print(type(self.get_favorites()))
-            if favorite.to_json().get('url') in current_favorites.values():
-                print('page already in favorite')
-                return('Padge Already A Favorite')
-            else:
-                with open('favorites/favorites.json', 'a', encoding="utf-8") as outFile:
-                    outFile.write(unicode(favorite_json))
-                    outFile.write(unicode("\n"))
+            fav = Favorites()
+            user_name = fav.get_curret_user()
+            response = fav.add_favorite(user_name,pageUrl,pageTitle)
 
         except Exception, e:
             print str(e)
+            response = 'ERROR adding favorite'
 
-        return favorite_json
+        return response
 
     def get_favorites(self):
 
-        try:
-            favoritesList = {}
-            with open('favorites/favorites.json', 'r') as inputFile:
-                json_data = inputFile.read()
-                favoritesList = json.loads(json_data)
-                print(favoritesList)
+        favorite = Favorites()
+        user_name = favorite.get_curret_user()
+        favorites_list = favorite.get_favorites(user_name)
 
-        except Exception, e:
-            print str(e)
+        pages = []
+        for fav in favorites_list:
+            favorite_page = FavoritePage(fav[2], fav[1])
+            pages.append(favorite_page)
 
-        return favoritesList
+        return pages
+
+    def delete_favorite(self, url, title):
+        favorite = Favorites()
+        user_name = favorite.get_curret_user()
+        response = favorite.remove_favorite(user_name, url, title)
+        return response
 
 
 class FavoritePage:
@@ -428,5 +446,3 @@ class FavoritePage:
         return {"page": {'title': self.pageTitle, 'url': self.pageUrl}}
 
 
-=======
->>>>>>> 90330a849b559c33392a402049c36603de0e5787
