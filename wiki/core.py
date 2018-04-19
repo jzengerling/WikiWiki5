@@ -429,7 +429,6 @@ class Wiki(object):
         ########################################
         
         return matched
-<<<<<<< HEAD
 
     def random(self):
         all_pages = self.index()
@@ -448,10 +447,7 @@ class Wiki(object):
         return -1
 
     def favorite(self, pageUrl, pageTitle):
-        print('favorite called in core.wiki...url: ' + pageUrl + "...title: " + pageTitle)
-
         try:
-            print(type(self.get_favorites()))
             fav = Favorites()
             user_name = fav.get_curret_user()
             response = fav.add_favorite(user_name,pageUrl,pageTitle)
