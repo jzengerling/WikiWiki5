@@ -15,7 +15,7 @@ class PageHasCreatorTestCase(WikiBaseTestCase):
             Assert that pages matching creator's name exists
         """
         pages = self.index()
-        regex = re.compile('colton', re.IGNORECASE if ignore_case else 0)
+        regex = re.compile('nick', re.IGNORECASE if ignore_case else 0)
         matched = []
         matched = creator_module.search_by_creator(pages, regex)
         assert matched
