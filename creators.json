@@ -13,8 +13,8 @@
     ],
     "colton": [
         {
-            "creator": "admin", 
-            "time": "04-14-2018 00:27:11"
+            "time": "04-14-2018 00:27:11", 
+            "creator": "admin"
         }
     ], 
     "hockey":[
@@ -25,14 +25,14 @@
     ],
     "home": [
         {
-            "creator": "admin", 
-            "time": "04-14-2018 00:27:11"
+            "time": "04-14-2018 00:27:11", 
+            "creator": "admin"
         }
     ], 
     "jacob": [
         {
-            "creator": "admin", 
-            "time": "04-14-2018 00:27:11"
+            "time": "04-14-2018 00:27:11", 
+            "creator": "admin"
         }
     ], 
     "linear_algebra":[
@@ -41,28 +41,16 @@
             "time": "04-18-2018 17:24:22"
         }
     ],
-    "new": [
-        {
-            "creator": "colton", 
-            "time": "04-19-2018 19:48:25"
-        }
-    ], 
-    "newpage": [
-        {
-            "creator": "colton", 
-            "time": "04-19-2018 22:13:32"
-        }
-    ], 
     "nick": [
         {
-            "creator": "admin", 
-            "time": "04-14-2018 00:27:11"
+            "time": "04-14-2018 00:27:11", 
+            "creator": "admin"
         }
     ], 
     "sam": [
         {
-            "creator": "admin", 
-            "time": "04-14-2018 00:27:11"
+            "time": "04-14-2018 00:27:11", 
+            "creator": "admin"
         }
     ],
     "soccer":[
