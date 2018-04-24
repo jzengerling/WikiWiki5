@@ -91,9 +91,7 @@ def edit(url):
 @protect
 def random():
     random_page = current_wiki.random()
-    page = current_wiki.get_or_404(random_page.url)
-    return render_template('page.html', page=page)
-    return redirect(url_for('wiki.home'))
+    return display(random_page.url)
 
 
 @bp.route('/favorite/<path:url>', methods=['GET', 'POST'])
@@ -101,7 +99,7 @@ def random():
 def favorite(url):
     page = current_wiki.get_or_404(url)
     current_wiki.favorite(url,page.title)
-    return render_template('page.html', page=page)
+    return display(url)
 
 
 @bp.route('/favorites/', methods=['GET', 'POST'])
